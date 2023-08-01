@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="toolbarStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/sp_25</item>
+        <item name="android:color">@color/black</item>
+    </style>
+    
+    <style name="card_header">
+        <item name="android:textSize">@dimen/sp_25</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/green</item>
+    </style>
+</resources>

@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Todo app</string>
+
+    <string name="toolbar">My Lists</string>
+
+    <string name="open">Open</string>
+    <string name="task_demo">Task Demo</string>
+
+    <string name="task">Task</string>
+    <string name="calendar">Calendar</string>
+    <string name="settings">Settings</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
