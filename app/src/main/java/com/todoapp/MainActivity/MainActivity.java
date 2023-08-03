@@ -16,6 +16,7 @@ import com.todoapp.Fragment.Calendar.CalendarFragment;
 import com.todoapp.Fragment.Home.HomeFragment;
 import com.todoapp.R;
 import com.todoapp.Fragment.Setting.SettingFragment;
+import com.todoapp.common.DBHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottom_menu;
     FrameLayout fameLayout;
     Fragment HomeFragment,CalendarFragment,SettingFragment;
-
+    DBHandler dbHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById();
         init();
-
     }
 
     void init(){
+        dbHandler = new DBHandler(MainActivity.this);
+
+        dbHandler.addTodoTask("Dharmik");
+
         HomeFragment = new HomeFragment();
         CalendarFragment = new CalendarFragment();
         SettingFragment = new SettingFragment();
