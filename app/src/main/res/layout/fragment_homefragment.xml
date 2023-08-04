@@ -3,14 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/grey"
-    tools:context=".Fragment.Home.HomeFragment">
+    tools:context=".Fragment.Home.HomeFragment"
+
+    >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/addTodo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/baseline_add_24"
+        android:padding="@dimen/dp_15"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_250"
         />
 
 </RelativeLayout>

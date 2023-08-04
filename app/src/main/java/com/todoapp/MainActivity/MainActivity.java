@@ -6,12 +6,14 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.todoapp.Del_activity;
 import com.todoapp.Fragment.Calendar.CalendarFragment;
 import com.todoapp.Fragment.Home.HomeFragment;
 import com.todoapp.R;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout fameLayout;
     Fragment HomeFragment,CalendarFragment,SettingFragment;
     DBHandler dbHandler;
+    String txt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void init(){
+
+
+        txt = "Main Activity";
+
         dbHandler = new DBHandler(MainActivity.this);
 
         dbHandler.addTodoTask("Dharmik");
@@ -57,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openPop();
+                Intent intent = new Intent(MainActivity.this, Del_activity.class);
+                intent.putExtra("txt",txt);
+                startActivity(intent);
             }
         });
         bottom_menu.setSelectedItemId(R.id.task);
