@@ -77,6 +77,8 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
             @Override
             public void onClick(View view) {
                 dbHandler.addTodoTask(edtName.getText()+"");
+                configDatabase();
+                setAdapter(todolistModels);
                 dialog.hide();
             }
         });
