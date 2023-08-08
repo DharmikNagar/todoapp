@@ -3,6 +3,6 @@
     <item
         android:id="@+id/open"
         android:icon="@drawable/baseline_local_airport_24"
-        android:title="@string/open"
+        android:title="@string/add"
         />
 </menu>

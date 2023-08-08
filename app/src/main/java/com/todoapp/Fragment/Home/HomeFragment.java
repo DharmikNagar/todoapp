@@ -6,15 +6,20 @@ import android.os.Bundle;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.todoapp.Fragment.Home.adpter.Adpter_TodoList;
 import com.todoapp.Fragment.Home.model.todolist_model;
@@ -27,13 +32,15 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment implements Adpter_TodoList.OnclicktodoListner{
     View view;
     RecyclerView rcyView;
-    AppCompatImageView addTodo;
+    AppCompatImageView imageView;
+    AppCompatTextView title;
+    AppCompatImageView addTodo,toolPop,editIcon,delIcon;
     DBHandler dbHandler;
 
     ArrayList<todolist_model> todolistModels;
-    ArrayList<String> tsk_name;
     AppCompatEditText edtName;
     AppCompatButton submit;
+    RelativeLayout toolbar;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -57,14 +64,26 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
     }
 
     void findById(){
-        rcyView = view.findViewById(R.id.rcyView);
-        addTodo = view.findViewById(R.id.addTodo);
-        addTodo.setOnClickListener(new View.OnClickListener() {
+        toolPop = getActivity().findViewById(R.id.toolPop);
+        editIcon = getActivity().findViewById(R.id.editIcon);
+        delIcon = getActivity().findViewById(R.id.delIcon);
+
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        title = getActivity().findViewById(R.id.title);
+        toolPop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDialog();
+                openPop();
             }
         });
+        rcyView = view.findViewById(R.id.rcyView);
+        addTodo = view.findViewById(R.id.addTodo);
+//        addTodo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                openDialog();
+//            }
+//        });
     }
 
     void openDialog(){
@@ -96,8 +115,54 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
 
     @Override
     public void Onclicktodo(int position) {
-        Toast.makeText(getContext(), "position"+position, Toast.LENGTH_SHORT).show();
-        todolistModels.remove(position);
-        setAdapter(todolistModels);
+        title.setText("Edit List");
+        toolPop.setVisibility(View.GONE);
+        editIcon.setVisibility(View.VISIBLE);
+        delIcon.setVisibility(View.VISIBLE);
+        delIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title.setText("My Lists");
+                toolPop.setVisibility(View.VISIBLE);
+                editIcon.setVisibility(View.GONE);
+                delIcon.setVisibility(View.GONE);
+
+
+                dbHandler.deleteTodo(""+todolistModels.get(position).getId());
+                todolistModels.remove(position);
+                configDatabase();
+                setAdapter(todolistModels);
+
+            }
+        });
+//        Toast.makeText(getContext(), "position"+position, Toast.LENGTH_SHORT).show();
+//        dbHandler.deleteTodo(""+todolistModels.get(position).getId());
+//        todolistModels.remove(position);
+//        configDatabase();
+//        setAdapter(todolistModels);
+    }
+
+    @Override
+    public void OnclickVisible(int position) {
+        title.setText("My Lists");
+        toolPop.setVisibility(View.VISIBLE);
+        editIcon.setVisibility(View.GONE);
+        delIcon.setVisibility(View.GONE);
+
+
+    }
+
+    void openPop(){
+        PopupMenu popupMenu = new PopupMenu(getContext(),toolPop);
+
+        popupMenu.getMenuInflater().inflate(R.menu.toolbar_popup, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                openDialog();
+                return true;
+            }
+        });
+        popupMenu.show();
     }
 }

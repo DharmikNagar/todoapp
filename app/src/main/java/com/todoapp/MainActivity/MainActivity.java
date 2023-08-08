@@ -18,7 +18,6 @@ import com.todoapp.Fragment.Calendar.CalendarFragment;
 import com.todoapp.Fragment.Home.HomeFragment;
 import com.todoapp.R;
 import com.todoapp.Fragment.Setting.SettingFragment;
-import com.todoapp.common.DBHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottom_menu;
     FrameLayout fameLayout;
     Fragment HomeFragment,CalendarFragment,SettingFragment;
-    DBHandler dbHandler;
     String txt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         txt = "Main Activity";
 
-        dbHandler = new DBHandler(MainActivity.this);
-
-        dbHandler.addTodoTask("Dharmik");
 
         HomeFragment = new HomeFragment();
         CalendarFragment = new CalendarFragment();
@@ -97,14 +92,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    void openPop(){
-        PopupMenu popupMenu = new PopupMenu(MainActivity.this,imageView);
-
-        popupMenu.getMenuInflater().inflate(R.menu.toolbar_popup, popupMenu.getMenu());
-
-        popupMenu.show();
-    }
-
 
 }

@@ -64,6 +64,12 @@ public class DBHandler extends SQLiteOpenHelper {
         return courseModalArrayList;
     }
 
+    public void deleteTodo(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, "id=?", new String[]{id});
+        db.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
