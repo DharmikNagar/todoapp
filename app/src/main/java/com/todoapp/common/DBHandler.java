@@ -70,6 +70,17 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateTodo(String title, String id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TITLE, title);
+
+        db.update(TABLE_NAME, values, "id=?", new String[]{id});
+        db.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);

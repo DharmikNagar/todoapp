@@ -32,7 +32,6 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment implements Adpter_TodoList.OnclicktodoListner{
     View view;
     RecyclerView rcyView;
-    AppCompatImageView imageView;
     AppCompatTextView title;
     AppCompatImageView addTodo,toolPop,editIcon,delIcon;
     DBHandler dbHandler;
@@ -86,19 +85,35 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
 //        });
     }
 
-    void openDialog(){
+    void openDialog(String title_,String id){
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_add_todo);
         edtName = dialog.findViewById(R.id.edtName);
         submit = dialog.findViewById(R.id.submit);
 
+        if(!id.isEmpty()){
+            edtName.setText(title_);
+        }
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHandler.addTodoTask(edtName.getText()+"");
-                configDatabase();
-                setAdapter(todolistModels);
-                dialog.hide();
+                if(!id.isEmpty()){
+                    dbHandler.updateTodo(edtName.getText()+"",id);
+                    configDatabase();
+                    setAdapter(todolistModels);
+                    dialog.hide();
+
+                    title.setText("My Lists");
+                    toolPop.setVisibility(View.VISIBLE);
+                    editIcon.setVisibility(View.GONE);
+                    delIcon.setVisibility(View.GONE);
+                }else{
+                    dbHandler.addTodoTask(edtName.getText()+"");
+                    configDatabase();
+                    setAdapter(todolistModels);
+                    dialog.hide();
+                }
             }
         });
 
@@ -129,17 +144,20 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
 
 
                 dbHandler.deleteTodo(""+todolistModels.get(position).getId());
-                todolistModels.remove(position);
+//                todolistModels.remove(position);
                 configDatabase();
                 setAdapter(todolistModels);
 
             }
         });
-//        Toast.makeText(getContext(), "position"+position, Toast.LENGTH_SHORT).show();
-//        dbHandler.deleteTodo(""+todolistModels.get(position).getId());
-//        todolistModels.remove(position);
-//        configDatabase();
-//        setAdapter(todolistModels);
+
+        editIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialog(""+todolistModels.get(position).getTitle(),""+todolistModels.get(position).getId());
+
+            }
+        });
     }
 
     @Override
@@ -148,8 +166,6 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
         toolPop.setVisibility(View.VISIBLE);
         editIcon.setVisibility(View.GONE);
         delIcon.setVisibility(View.GONE);
-
-
     }
 
     void openPop(){
@@ -159,7 +175,7 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                openDialog();
+                openDialog("","");
                 return true;
             }
         });
