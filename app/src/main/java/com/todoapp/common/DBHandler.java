@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.todoapp.Fragment.Home.model.todolist_model;
+import com.todoapp.taskView.model.DateWiseTaskModel;
 
 import java.util.ArrayList;
 
@@ -15,8 +16,10 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final Integer DB_VERSION = 1;
 
     private static final String TABLE_NAME = "todotask";
+    private static final String TABLE_NAME_DATE_WISE_TASK = "datewisetask";
     private static final String ID = "id";
     private static final String TITLE = "title";
+    private static final String DATE = "date";
 
     public DBHandler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -29,6 +32,12 @@ public class DBHandler extends SQLiteOpenHelper {
                 + TITLE+ " TEXT)";
 
         sqLiteDatabase.execSQL(query);
+
+        String query1 = "CREATE TABLE " + TABLE_NAME_DATE_WISE_TASK + " ("
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DATE+ " TEXT)";
+
+        sqLiteDatabase.execSQL(query1);
     }
 
     public void addTodoTask(String title){
@@ -39,6 +48,18 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(TITLE, title);
 
         db.insert(TABLE_NAME, null, values);
+
+        db.close();
+    }
+
+    public void addDateTask(String date){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(DATE, date);
+
+        db.insert(TABLE_NAME_DATE_WISE_TASK, null, values);
 
         db.close();
     }
@@ -62,6 +83,27 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         cursorTodo.close();
         return courseModalArrayList;
+    }
+
+    public ArrayList<DateWiseTaskModel> readDateTask()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursordatewise
+                = db.rawQuery("SELECT * FROM " + TABLE_NAME_DATE_WISE_TASK, null);
+
+        ArrayList<DateWiseTaskModel> DateTaskModalArrayList
+                = new ArrayList<>();
+
+        if (cursordatewise.moveToFirst()) {
+            do {
+                DateTaskModalArrayList.add(new DateWiseTaskModel(
+                        cursordatewise.getInt(0),
+                        cursordatewise.getString(1)));
+            } while (cursordatewise.moveToNext());
+        }
+        cursordatewise.close();
+        return DateTaskModalArrayList;
     }
 
     public void deleteTodo(String id) {

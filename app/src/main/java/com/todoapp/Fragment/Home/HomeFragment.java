@@ -1,6 +1,7 @@
 package com.todoapp.Fragment.Home;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -26,6 +27,7 @@ import com.todoapp.Fragment.Home.model.todolist_model;
 import com.todoapp.MainActivity.MainActivity;
 import com.todoapp.R;
 import com.todoapp.common.DBHandler;
+import com.todoapp.taskView.activity.TaskActivity;
 
 import java.util.ArrayList;
 
@@ -41,7 +43,6 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
     AppCompatButton submit;
     RelativeLayout toolbar;
     public HomeFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -56,6 +57,7 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
 
         return view;
     }
+
     void configDatabase(){
         todolistModels = new ArrayList<>();
         dbHandler = new DBHandler(getContext());
@@ -166,6 +168,10 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
         toolPop.setVisibility(View.VISIBLE);
         editIcon.setVisibility(View.GONE);
         delIcon.setVisibility(View.GONE);
+
+        Intent intent = new Intent(getActivity(), TaskActivity.class);
+        intent.putExtra("task_name",""+todolistModels.get(position).getTitle());
+        startActivity(intent);
     }
 
     void openPop(){

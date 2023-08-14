@@ -17,6 +17,9 @@
         android:theme="@style/Theme.TodoApp"
         tools:targetApi="31">
         <activity
+            android:name=".taskView.activity.TaskActivity"
+            android:exported="false" />
+        <activity
             android:name=".Del_activity"
             android:exported="false" />
         <activity
