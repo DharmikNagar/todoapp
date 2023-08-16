@@ -42,8 +42,6 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
     AppCompatEditText edtName;
     AppCompatButton submit;
     RelativeLayout toolbar;
-    public HomeFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

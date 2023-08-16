@@ -90,7 +90,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursordatewise
-                = db.rawQuery("SELECT * FROM " + TABLE_NAME_DATE_WISE_TASK, null);
+                = db.rawQuery("SELECT * FROM " + TABLE_NAME_DATE_WISE_TASK , null);
 
         ArrayList<DateWiseTaskModel> DateTaskModalArrayList
                 = new ArrayList<>();

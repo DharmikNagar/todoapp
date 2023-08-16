@@ -6,6 +6,8 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -19,31 +21,52 @@ import android.widget.DatePicker;
 
 import com.todoapp.R;
 import com.todoapp.common.DBHandler;
+import com.todoapp.taskView.adapter.TaskDateAdapter;
+import com.todoapp.taskView.model.DateWiseTaskModel;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-public class TaskActivity extends AppCompatActivity {
+public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.OnclickTaskDate {
     AppCompatEditText edtDate;
     AppCompatButton submit;
+    RecyclerView rcyView;
     AppCompatTextView title;
     AppCompatImageView toolPop;
     DBHandler dbHandler;
+    ArrayList<DateWiseTaskModel> dateWiseTaskModels ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
-        findViewById();
-        onclick();
+        refreshVoid();
 
         Intent intent = getIntent();
         title.setText(intent.getStringExtra("task_name"));
+    }
+
+    void refreshVoid(){
+        findViewById();
+        onclick();
     }
 
     void findViewById(){
         dbHandler = new DBHandler(TaskActivity.this);
         title = findViewById(R.id.title);
         toolPop = findViewById(R.id.toolPop);
+        rcyView = findViewById(R.id.rcyView);
+
+        dateWiseTaskModels = new ArrayList<>();
+
+        if(dbHandler.readDateTask().size()>0){
+            dateWiseTaskModels.addAll(dbHandler.readDateTask());
+        }
+
+        if(dateWiseTaskModels.size()>0){
+            adapter();
+        }
+
     }
 
     void onclick(){
@@ -53,8 +76,13 @@ public class TaskActivity extends AppCompatActivity {
                 popup();
             }
         });
+    }
 
-
+    void adapter(){
+        TaskDateAdapter taskDateAdapter = new TaskDateAdapter(TaskActivity.this, dateWiseTaskModels,this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TaskActivity.this, RecyclerView.VERTICAL, false);
+        rcyView.setLayoutManager(linearLayoutManager);
+        rcyView.setAdapter(taskDateAdapter);
     }
 
     void openDialog(){
@@ -79,7 +107,6 @@ public class TaskActivity extends AppCompatActivity {
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                                 calendar.set(year, month, dayOfMonth);
                                 String dateString = sdf.format(calendar.getTime());
-
                                 edtDate.setText(dateString);
                             }
                         }, year, month, day);
@@ -99,6 +126,9 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dbHandler.addDateTask(edtDate.getText()+"");
+                dialog.hide();
+                refreshVoid();
+
             }
         });
         dialog.show();
@@ -120,5 +150,10 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
         popupMenu.show();
+    }
+
+    @Override
+    public void onclick(int position) {
+
     }
 }
