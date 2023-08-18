@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
@@ -35,6 +36,8 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
     AppCompatTextView title;
     AppCompatImageView toolPop;
     DBHandler dbHandler;
+    static String id = null;
+
     ArrayList<DateWiseTaskModel> dateWiseTaskModels ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,7 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
         setContentView(R.layout.activity_task);
         refreshVoid();
 
-        Intent intent = getIntent();
-        title.setText(intent.getStringExtra("task_name"));
+
     }
 
     void refreshVoid(){
@@ -59,12 +61,19 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
 
         dateWiseTaskModels = new ArrayList<>();
 
-        if(dbHandler.readDateTask().size()>0){
-            dateWiseTaskModels.addAll(dbHandler.readDateTask());
-        }
+        Intent intent = getIntent();
+        title.setText(intent.getStringExtra("task_name"));
 
-        if(dateWiseTaskModels.size()>0){
-            adapter();
+        try{
+            if(dbHandler.readDateTask(intent.getStringExtra("task_id")+"").size()>0){
+                dateWiseTaskModels.addAll(dbHandler.readDateTask(intent.getStringExtra("task_id")+""));
+            }
+
+            if(dateWiseTaskModels.size()>0){
+                adapter();
+            }
+        }catch (Exception e){
+
         }
 
     }
@@ -121,14 +130,13 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
                 });
             }
         });
-
+        Intent intent = getIntent();
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHandler.addDateTask(edtDate.getText()+"");
+                dbHandler.addDateTask(edtDate.getText()+"",Integer.parseInt(intent.getStringExtra("task_id")+""));
                 dialog.hide();
                 refreshVoid();
-
             }
         });
         dialog.show();

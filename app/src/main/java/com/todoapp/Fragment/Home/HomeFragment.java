@@ -169,6 +169,7 @@ public class HomeFragment extends Fragment implements Adpter_TodoList.Onclicktod
 
         Intent intent = new Intent(getActivity(), TaskActivity.class);
         intent.putExtra("task_name",""+todolistModels.get(position).getTitle());
+        intent.putExtra("task_id",""+todolistModels.get(position).getId());
         startActivity(intent);
     }
 

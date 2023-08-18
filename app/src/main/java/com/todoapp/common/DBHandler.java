@@ -12,12 +12,14 @@ import com.todoapp.taskView.model.DateWiseTaskModel;
 import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final String DB_NAME = "todoDatabase";
+    private static final String DB_NAME = "todoDatabase.db";
     private static final Integer DB_VERSION = 1;
 
     private static final String TABLE_NAME = "todotask";
     private static final String TABLE_NAME_DATE_WISE_TASK = "datewisetask";
     private static final String ID = "id";
+    private static final String CATEGORY = "category";
+
     private static final String TITLE = "title";
     private static final String DATE = "date";
 
@@ -35,7 +37,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String query1 = "CREATE TABLE " + TABLE_NAME_DATE_WISE_TASK + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DATE+ " TEXT)";
+                + DATE + " TEXT,"
+                + CATEGORY + " INTEGER)";
 
         sqLiteDatabase.execSQL(query1);
     }
@@ -52,12 +55,13 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addDateTask(String date){
+    public void addDateTask(String date,int id){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
         values.put(DATE, date);
+        values.put(CATEGORY, id);
 
         db.insert(TABLE_NAME_DATE_WISE_TASK, null, values);
 
@@ -85,12 +89,12 @@ public class DBHandler extends SQLiteOpenHelper {
         return courseModalArrayList;
     }
 
-    public ArrayList<DateWiseTaskModel> readDateTask()
+    public ArrayList<DateWiseTaskModel> readDateTask(String id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursordatewise
-                = db.rawQuery("SELECT * FROM " + TABLE_NAME_DATE_WISE_TASK , null);
+                = db.rawQuery("SELECT * FROM " + TABLE_NAME_DATE_WISE_TASK + " WHERE "+CATEGORY+" = '"+id+"' ", null);
 
         ArrayList<DateWiseTaskModel> DateTaskModalArrayList
                 = new ArrayList<>();
@@ -99,7 +103,8 @@ public class DBHandler extends SQLiteOpenHelper {
             do {
                 DateTaskModalArrayList.add(new DateWiseTaskModel(
                         cursordatewise.getInt(0),
-                        cursordatewise.getString(1)));
+                        cursordatewise.getString(1),
+                        cursordatewise.getInt(2)));
             } while (cursordatewise.moveToNext());
         }
         cursordatewise.close();
