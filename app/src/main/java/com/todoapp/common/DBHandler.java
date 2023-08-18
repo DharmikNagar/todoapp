@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.todoapp.Fragment.Home.model.todolist_model;
 import com.todoapp.taskView.model.DateWiseTaskModel;
+import com.todoapp.taskView.model.TaskModel;
 
 import java.util.ArrayList;
 
@@ -17,10 +18,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
     private static final String TABLE_NAME = "todotask";
     private static final String TABLE_NAME_DATE_WISE_TASK = "datewisetask";
+    private static final String TABLE_NAME_TASK = "tasktable";
     private static final String ID = "id";
     private static final String CATEGORY = "category";
 
     private static final String TITLE = "title";
+    private static final String SUBTITLE = "subtitle";
+    private static final String TIMING = "timing";
     private static final String DATE = "date";
 
     public DBHandler(Context context) {
@@ -41,8 +45,31 @@ public class DBHandler extends SQLiteOpenHelper {
                 + CATEGORY + " INTEGER)";
 
         sqLiteDatabase.execSQL(query1);
+
+        String query2 = "CREATE TABLE " + TABLE_NAME_TASK + " ("
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + TITLE + " TEXT,"
+                + SUBTITLE + " TEXT,"
+                + TIMING + " TEXT,"
+                + CATEGORY + " INTEGER)";
+
+        sqLiteDatabase.execSQL(query2);
     }
 
+    public void addTask(String title,String subtitle,String timing,int category){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(TITLE, title);
+        values.put(SUBTITLE, subtitle);
+        values.put(TIMING, timing);
+        values.put(CATEGORY, category);
+
+        db.insert(TABLE_NAME_TASK, null, values);
+
+        db.close();
+    }
     public void addTodoTask(String title){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -66,6 +93,30 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_NAME_DATE_WISE_TASK, null, values);
 
         db.close();
+    }
+
+    public ArrayList<TaskModel> readTask(String id)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursorTodo
+                = db.rawQuery("SELECT * FROM " + TABLE_NAME_TASK + " WHERE "+CATEGORY+" = '"+id+"' ", null);
+
+        ArrayList<TaskModel> taskModalArrayList
+                = new ArrayList<>();
+
+        if (cursorTodo.moveToFirst()) {
+            do {
+                taskModalArrayList.add(new TaskModel(
+                        cursorTodo.getInt(0),
+                        cursorTodo.getString(1),
+                        cursorTodo.getString(2),
+                        cursorTodo.getString(3),
+                        cursorTodo.getInt(4)));
+            } while (cursorTodo.moveToNext());
+        }
+        cursorTodo.close();
+        return taskModalArrayList;
     }
 
     public ArrayList<todolist_model> readTodo()

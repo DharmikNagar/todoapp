@@ -16,6 +16,10 @@
     <string name="open">Open</string>
     <string name="task_demo">Task Demo</string>
 
+    <string name="title">TItle</string>
+    <string name="subtitle">Sub Title</string>
+    <string name="timing">00:00</string>
+
     <string name="addtaskdate">Add Task Date</string>
 
     <string name="task">Task</string>

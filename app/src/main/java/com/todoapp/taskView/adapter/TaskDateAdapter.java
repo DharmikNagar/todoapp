@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,7 +56,12 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
             holder.sample_title.setText(dateWiseTaskModels.get(position).getDate());
         }
 
-
+        holder.add_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onclickTaskDate.onTaskAddclick(position,dateWiseTaskModels.get(position).getId());
+            }
+        });
     }
 
     @Override
@@ -65,14 +71,16 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         AppCompatTextView sample_title;
+        AppCompatImageView add_header;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             sample_title = itemView.findViewById(R.id.sample_title);
+            add_header = itemView.findViewById(R.id.add_header);
         }
     }
 
     public interface OnclickTaskDate{
-
         void onclick(int position);
+        void onTaskAddclick(int position,int id);
     }
 }

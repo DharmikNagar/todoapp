@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.todoapp.R;
 import com.todoapp.common.DBHandler;
@@ -30,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.OnclickTaskDate {
-    AppCompatEditText edtDate;
+    AppCompatEditText edtDate,edtTitle,edtSubTitle,edtTiming;
     AppCompatButton submit;
     RecyclerView rcyView;
     AppCompatTextView title;
@@ -163,5 +166,49 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
     @Override
     public void onclick(int position) {
 
+    }
+
+    @Override
+    public void onTaskAddclick(int position,int id) {
+        dialogBoxTask(id);
+    }
+
+    void dialogBoxTask(int id){
+        Dialog dialog = new Dialog(TaskActivity.this);
+        dialog.setContentView(R.layout.dialog_add_task);
+        edtTitle = dialog.findViewById(R.id.edtTitle);
+        edtSubTitle = dialog.findViewById(R.id.edtSubTitle);
+        edtTiming = dialog.findViewById(R.id.edtTiming);
+        submit = dialog.findViewById(R.id.submit);
+
+        edtTiming.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(TaskActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        edtTiming.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+
+            }
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHandler.addTask(edtTitle.getText()+"",edtSubTitle.getText()+"",edtTiming.getText()+"",id);
+                dialog.hide();
+            }
+        });
+
+        dialog.show();
     }
 }
