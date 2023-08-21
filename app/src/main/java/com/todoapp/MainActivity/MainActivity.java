@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         txt = "Main Activity";
 
-
         HomeFragment = new HomeFragment();
         CalendarFragment = new CalendarFragment();
         SettingFragment = new SettingFragment();

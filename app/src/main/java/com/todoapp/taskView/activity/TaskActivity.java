@@ -47,8 +47,6 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         refreshVoid();
-
-
     }
 
     void refreshVoid(){

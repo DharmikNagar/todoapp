@@ -21,4 +21,12 @@
         android:tint="@color/green"
         />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcyView"
+        android:layout_below="@+id/add_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        />
+
 </RelativeLayout>

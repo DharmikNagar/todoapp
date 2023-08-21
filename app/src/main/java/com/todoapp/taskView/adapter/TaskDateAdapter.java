@@ -1,6 +1,7 @@
 package com.todoapp.taskView.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.todoapp.R;
+import com.todoapp.common.DBHandler;
+import com.todoapp.taskView.activity.TaskActivity;
 import com.todoapp.taskView.model.DateWiseTaskModel;
+import com.todoapp.taskView.model.TaskModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,7 +27,9 @@ import java.util.Locale;
 public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHolder> {
     Context context;
     OnclickTaskDate onclickTaskDate;
+    DBHandler dbHandler;
     ArrayList<DateWiseTaskModel> dateWiseTaskModels;
+    ArrayList<TaskModel> taskModel = new ArrayList<>();
     public TaskDateAdapter(Context context, ArrayList<DateWiseTaskModel> dateWiseTaskModels, OnclickTaskDate onclickTaskDate) {
         this.context = context;
         this.onclickTaskDate = onclickTaskDate;
@@ -62,6 +69,15 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
                 onclickTaskDate.onTaskAddclick(position,dateWiseTaskModels.get(position).getId());
             }
         });
+
+        dbHandler = new DBHandler(context);
+        taskModel = dbHandler.readTask(dateWiseTaskModels.get(position).getId()+"");
+
+        TaskAdapter taskAdapter = new TaskAdapter(context, taskModel);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+        holder.rcyView.setLayoutManager(linearLayoutManager);
+        holder.rcyView.setAdapter(taskAdapter);
+
     }
 
     @Override
@@ -71,11 +87,13 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         AppCompatTextView sample_title;
+        RecyclerView rcyView;
         AppCompatImageView add_header;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             sample_title = itemView.findViewById(R.id.sample_title);
             add_header = itemView.findViewById(R.id.add_header);
+            rcyView = itemView.findViewById(R.id.rcyView);
         }
     }
 
