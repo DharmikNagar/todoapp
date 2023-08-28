@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.todoapp.R;
 import com.todoapp.common.DBHandler;
-import com.todoapp.taskView.activity.TaskActivity;
 import com.todoapp.taskView.model.DateWiseTaskModel;
 import com.todoapp.taskView.model.TaskModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +30,7 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
     DBHandler dbHandler;
     ArrayList<DateWiseTaskModel> dateWiseTaskModels;
     ArrayList<TaskModel> taskModel = new ArrayList<>();
+    TaskAdapter taskAdapter;
     public TaskDateAdapter(Context context, ArrayList<DateWiseTaskModel> dateWiseTaskModels, OnclickTaskDate onclickTaskDate) {
         this.context = context;
         this.onclickTaskDate = onclickTaskDate;
@@ -48,35 +49,35 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
         Date today = Calendar.getInstance().getTime();
-        String todayDate = df.format(today);
 
-        Date tomorrow = calendar.getTime();
-        String tomorrowDate = df.format(tomorrow);
+            String todayDate = df.format(today);
 
-        if(todayDate.equals(dateWiseTaskModels.get(position).getDate())){
-            holder.sample_title.setText("Today");
-        }else if(tomorrowDate.equals(dateWiseTaskModels.get(position).getDate())){
-            holder.sample_title.setText("Tomorrow");
-        }else{
-            holder.sample_title.setText(dateWiseTaskModels.get(position).getDate());
-        }
+            Date tomorrow = calendar.getTime();
+            String tomorrowDate = df.format(tomorrow);
 
-        holder.add_header.setOnClickListener(new View.OnClickListener() {
+            if(todayDate.equals(dateWiseTaskModels.get(position).getDate())){
+                holder.sample_title.setText("Today");
+            }else if(tomorrowDate.equals(dateWiseTaskModels.get(position).getDate())){
+                holder.sample_title.setText("Tomorrow");
+            }else{
+                holder.sample_title.setText(dateWiseTaskModels.get(position).getDate());
+            }
+
+            dbHandler = new DBHandler(context);
+            taskModel = dbHandler.readTask(dateWiseTaskModels.get(position).getId()+"");
+
+            taskAdapter = new TaskAdapter(context, taskModel);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+            holder.rcyView.setLayoutManager(linearLayoutManager);
+            holder.rcyView.setAdapter(taskAdapter);
+
+            holder.add_header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onclickTaskDate.onTaskAddclick(position,dateWiseTaskModels.get(position).getId());
+                onclickTaskDate.onTaskAddclick(position,dateWiseTaskModels.get(position).getId(),taskAdapter);
             }
         });
-
-        dbHandler = new DBHandler(context);
-        taskModel = dbHandler.readTask(dateWiseTaskModels.get(position).getId()+"");
-
-        TaskAdapter taskAdapter = new TaskAdapter(context, taskModel);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
-        holder.rcyView.setLayoutManager(linearLayoutManager);
-        holder.rcyView.setAdapter(taskAdapter);
 
     }
 
@@ -99,6 +100,6 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
 
     public interface OnclickTaskDate{
         void onclick(int position);
-        void onTaskAddclick(int position,int id);
+        void onTaskAddclick(int position, int id, TaskAdapter taskAdapter);
     }
 }

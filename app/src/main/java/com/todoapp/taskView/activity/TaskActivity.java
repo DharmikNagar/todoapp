@@ -21,16 +21,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.todoapp.R;
 import com.todoapp.common.DBHandler;
+import com.todoapp.taskView.adapter.TaskAdapter;
 import com.todoapp.taskView.adapter.TaskDateAdapter;
 import com.todoapp.taskView.model.DateWiseTaskModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.OnclickTaskDate {
     AppCompatEditText edtDate,edtTitle,edtSubTitle,edtTiming;
@@ -41,7 +44,7 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
     DBHandler dbHandler;
     static String id = null;
 
-    ArrayList<DateWiseTaskModel> dateWiseTaskModels ;
+    ArrayList<DateWiseTaskModel> dateWiseTaskModels,newdateWiseTaskModels ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +64,7 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
         rcyView = findViewById(R.id.rcyView);
 
         dateWiseTaskModels = new ArrayList<>();
+        newdateWiseTaskModels = new ArrayList<>();
 
         Intent intent = getIntent();
         title.setText(intent.getStringExtra("task_name"));
@@ -89,11 +93,31 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
     }
 
     void adapter(){
-        TaskDateAdapter taskDateAdapter = new TaskDateAdapter(TaskActivity.this, dateWiseTaskModels,this);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        for (int i = 0; i < dateWiseTaskModels.size(); i++) {
+            String dateCheck = dateWiseTaskModels.get(i).getDate();
+
+            try {
+                Date d = df.parse(dateCheck);
+
+                if (d.after(calendar.getTime())) {
+                    newdateWiseTaskModels.add(dateWiseTaskModels.get(i));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        TaskDateAdapter taskDateAdapter = new TaskDateAdapter(TaskActivity.this, newdateWiseTaskModels,this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TaskActivity.this, RecyclerView.VERTICAL, false);
         rcyView.setLayoutManager(linearLayoutManager);
         rcyView.setAdapter(taskDateAdapter);
     }
+
 
     void openDialog(){
         Dialog dialog = new Dialog(TaskActivity.this);
@@ -167,11 +191,11 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
     }
 
     @Override
-    public void onTaskAddclick(int position,int id) {
-        dialogBoxTask(id);
+    public void onTaskAddclick(int position, int id, TaskAdapter taskAdapter) {
+        dialogBoxTask(id,taskAdapter);
     }
 
-    void dialogBoxTask(int id){
+    void dialogBoxTask(int id, TaskAdapter taskAdapter){
         Dialog dialog = new Dialog(TaskActivity.this);
         dialog.setContentView(R.layout.dialog_add_task);
         edtTitle = dialog.findViewById(R.id.edtTitle);
@@ -188,9 +212,11 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
                 int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(TaskActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @SuppressLint("DefaultLocale")
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        edtTiming.setText( selectedHour + ":" + selectedMinute);
+                        edtTiming.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+                        // selectedHour + ":" + selectedMinute
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -204,6 +230,7 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
             public void onClick(View view) {
                 dbHandler.addTask(edtTitle.getText()+"",edtSubTitle.getText()+"",edtTiming.getText()+"",id);
                 dialog.hide();
+                refreshVoid();
             }
         });
 
