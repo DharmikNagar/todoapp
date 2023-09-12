@@ -44,7 +44,7 @@ public class Adpter_TodoList extends RecyclerView.Adapter<Adpter_TodoList.ViewHo
         holder.lnLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                holder.lnLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.animation));
+//                holder.lnLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.animation));
                 onclicktodoListner.Onclicktodo(position);
                 holder.lnLayout.setBackground(ContextCompat.getDrawable(context,R.drawable.selected_todo_item));
                 return true;

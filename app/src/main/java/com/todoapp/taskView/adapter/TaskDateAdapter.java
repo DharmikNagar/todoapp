@@ -51,28 +51,28 @@ public class TaskDateAdapter extends RecyclerView.Adapter<TaskDateAdapter.ViewHo
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date today = Calendar.getInstance().getTime();
 
-            String todayDate = df.format(today);
+        String todayDate = df.format(today);
 
-            Date tomorrow = calendar.getTime();
-            String tomorrowDate = df.format(tomorrow);
+        Date tomorrow = calendar.getTime();
+        String tomorrowDate = df.format(tomorrow);
 
-            if(todayDate.equals(dateWiseTaskModels.get(position).getDate())){
-                holder.sample_title.setText("Today");
-            }else if(tomorrowDate.equals(dateWiseTaskModels.get(position).getDate())){
-                holder.sample_title.setText("Tomorrow");
-            }else{
-                holder.sample_title.setText(dateWiseTaskModels.get(position).getDate());
-            }
+        if(todayDate.equals(dateWiseTaskModels.get(position).getDate())){
+            holder.sample_title.setText("Today");
+        }else if(tomorrowDate.equals(dateWiseTaskModels.get(position).getDate())){
+            holder.sample_title.setText("Tomorrow");
+        }else{
+            holder.sample_title.setText(dateWiseTaskModels.get(position).getDate());
+        }
 
-            dbHandler = new DBHandler(context);
-            taskModel = dbHandler.readTask(dateWiseTaskModels.get(position).getId()+"");
+        dbHandler = new DBHandler(context);
+        taskModel = dbHandler.readTask(dateWiseTaskModels.get(position).getId()+"");
 
-            taskAdapter = new TaskAdapter(context, taskModel);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
-            holder.rcyView.setLayoutManager(linearLayoutManager);
-            holder.rcyView.setAdapter(taskAdapter);
+        taskAdapter = new TaskAdapter(context, taskModel);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+        holder.rcyView.setLayoutManager(linearLayoutManager);
+        holder.rcyView.setAdapter(taskAdapter);
 
-            holder.add_header.setOnClickListener(new View.OnClickListener() {
+        holder.add_header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onclickTaskDate.onTaskAddclick(position,dateWiseTaskModels.get(position).getId(),taskAdapter);

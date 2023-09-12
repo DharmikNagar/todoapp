@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.OnclickTaskDate {
+public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.OnclickTaskDate{
     AppCompatEditText edtDate,edtTitle,edtSubTitle,edtTiming;
     AppCompatButton submit;
     RecyclerView rcyView;
@@ -100,7 +100,6 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
 
         for (int i = 0; i < dateWiseTaskModels.size(); i++) {
             String dateCheck = dateWiseTaskModels.get(i).getDate();
-
             try {
                 Date d = df.parse(dateCheck);
 
@@ -117,7 +116,6 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
         rcyView.setLayoutManager(linearLayoutManager);
         rcyView.setAdapter(taskDateAdapter);
     }
-
 
     void openDialog(){
         Dialog dialog = new Dialog(TaskActivity.this);
@@ -236,4 +234,5 @@ public class TaskActivity extends AppCompatActivity implements TaskDateAdapter.O
 
         dialog.show();
     }
+
 }

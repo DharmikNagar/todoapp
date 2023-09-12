@@ -2,6 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/crdView"
+    android:clickable="true"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -29,15 +31,28 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/task_time"
+            android:layout_alignParentEnd="true"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="10:00"
-            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             style="@style/text_style"
             android:background="@drawable/circle_background"
             android:paddingVertical="@dimen/dp_7"
             android:paddingHorizontal="@dimen/sp_20"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/task_done"
+            android:layout_width="wrap_content"
+            android:layout_toLeftOf="@+id/task_time"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/baseline_done_outline_24"
+            android:paddingVertical="@dimen/dp_7"
+            android:paddingHorizontal="@dimen/sp_20"
+            android:layout_margin="@dimen/dp_5"
+            android:visibility="gone"
             />
 
     </RelativeLayout>

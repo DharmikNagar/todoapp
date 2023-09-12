@@ -21,7 +21,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String TABLE_NAME_TASK = "tasktable";
     private static final String ID = "id";
     private static final String CATEGORY = "category";
-
+    private static final String STATUS = "status";
     private static final String TITLE = "title";
     private static final String SUBTITLE = "subtitle";
     private static final String TIMING = "timing";
@@ -49,6 +49,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String query2 = "CREATE TABLE " + TABLE_NAME_TASK + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TITLE + " TEXT,"
+                + STATUS + " INTEGER,"
                 + SUBTITLE + " TEXT,"
                 + TIMING + " TEXT,"
                 + CATEGORY + " INTEGER)";
@@ -65,6 +66,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(SUBTITLE, subtitle);
         values.put(TIMING, timing);
         values.put(CATEGORY, category);
+        values.put(STATUS, 0);
 
         db.insert(TABLE_NAME_TASK, null, values);
 
@@ -110,9 +112,10 @@ public class DBHandler extends SQLiteOpenHelper {
                 taskModalArrayList.add(new TaskModel(
                         cursorTodo.getInt(0),
                         cursorTodo.getString(1),
-                        cursorTodo.getString(2),
+                        cursorTodo.getInt(2),
                         cursorTodo.getString(3),
-                        cursorTodo.getInt(4)));
+                        cursorTodo.getString(4),
+                        cursorTodo.getInt(5)));
             } while (cursorTodo.moveToNext());
         }
         cursorTodo.close();
@@ -176,6 +179,17 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(TITLE, title);
 
         db.update(TABLE_NAME, values, "id=?", new String[]{id});
+        db.close();
+    }
+
+    public void updateTodoTask(int status, String id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(STATUS, status);
+
+        db.update(TABLE_NAME_TASK, values, "id=?", new String[]{id});
         db.close();
     }
 
